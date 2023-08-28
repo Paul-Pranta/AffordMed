@@ -1,0 +1,24 @@
+
+
+app.get("/api/trains/:trainNo", auth, async (req, res) => { 
+  try {
+    const { trainNo } = req.params;
+
+    const authData = res.locals.authData; 
+    const headers = {
+      Authorization: `Bearer ${authData.access_token}` 
+    };
+
+    const singleData = await axios.get(`http://20.244.56.144/train/trains/${trainNo}`, {
+      headers
+    });
+
+    if (!singleData) {
+      return res.json({ error: "Error occurred while getting train details" });
+    }
+
+    res.json(singleData.data);
+  } catch (err) { 
+    res.status(500).json({ error: err.message });
+  }
+});
